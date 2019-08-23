@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+
+    <property name="logback.logPath" value="${catalina.base}/logs/project-web/" />
+    <!--<property name="logbase" value="${logback.logPath}" />-->
+    <property name="logbase" value="/home/chengduTelecom" />
+
+    <appender name="consoleLog" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <pattern>
+                %d - %msg%n
+            </pattern>
+        </layout>
+    </appender>
+
+    <!--每天生成日志的类-->
+    <appender name="fileInfoLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>   <!--过滤掉error的级别-->
+            <onMatch>DENY</onMatch>
+            <onMismatch>ACCEPT</onMismatch>
+        </filter>
+        <encoder>
+            <!--<pattern>
+                %msg%n
+            </pattern>-->
+            <!--<Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n</Pattern>-->
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]-%msg%n</Pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${logbase}/chengduLog/cdTelecom_info.%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+
+    <appender name="fileErrorLog" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>  <!--//打印error-->
+        </filter>
+        <encoder>
+            <!--<pattern>
+                %msg%n
+            </pattern>-->
+            <!--<Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]%logger{56}.%method:%L -%msg%n</Pattern>-->
+            <Pattern>%date{yyyy-MM-dd HH:mm:ss.SSS} %-5level[%thread]-%msg%n</Pattern>
+        </encoder>
+        <!--滚动策略-->
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <!--路径-->
+            <fileNamePattern>${logbase}/chengduLog/cdTelecom_error.%d.log</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <!--这里可以对不同的类进行日志的监控-->
+    <!--<logger name="com.*.*.*" level="ERROR,INFO,DEBUG">
+        <appender-ref ref="fileInfoLog" />
+        <appender-ref ref="fileErrorLog" />
+    </logger>
+    <logger name="com.*" level="INFO" additivity="false">
+        <appender-ref ref="fileInfoLog" />
+    </logger>
+    <root>
+        <level value="fileInfoLog" />
+        <appender-ref ref="consoleLog" />
+    </root>-->
+
+    <root level="info">
+        <appender-ref ref="consoleLog" />
+        <appender-ref ref="fileInfoLog" />
+        <appender-ref ref="fileErrorLog" />
+    </root>
+
+</configuration>

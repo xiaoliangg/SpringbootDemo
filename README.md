@@ -27,5 +27,5 @@ other:gson  lombok
 打包及运行:
 -------------------	
 From the command line with Maven installed:
-	$ cd CdTelecom
-	$ mvn clean install
+- cd CdTelecom
+- mvn clean install

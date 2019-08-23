@@ -12,16 +12,16 @@ other:gson  lombok
 
 基本功能支持: 
 -------------------	
-1、打印log
-2、资源属性注入，String、map
-3、mysql数据库连接，及crud
-4、定时任务
-5、消息分发，资源属性map注入
-6、事务
-7、log打印sql语句
-8、请求报文校验   spring封装的Hibernate校验框架
-9、异常处理     @ControllerAdvice + @ExceptionHandler 全局处理 Controller 层异常
-10、lombok新增
+ -- 1、打印log
+ -- 2、资源属性注入，String、map
+ -- 3、mysql数据库连接，及crud
+ -- 4、定时任务
+ -- 5、消息分发，资源属性map注入
+ -- 6、事务
+ -- 7、log打印sql语句
+ -- 8、请求报文校验   spring封装的Hibernate校验框架
+ -- 9、异常处理     @ControllerAdvice + @ExceptionHandler 全局处理 Controller 层异常
+ -- 10、lombok新增
 
 
 打包及运行:

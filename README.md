@@ -3,12 +3,15 @@ Springboot demo by xiaoliang。
 
 
 
-架构技术:jdk1.8+springboot2.1.6+Tomcat9.0.21+spring5.1.8+springmvc5.1.8+mybatis3.5.0
+架构技术:
+-------------------	
+jdk1.8+springboot2.1.6+Tomcat9.0.21+spring5.1.8+springmvc5.1.8+mybatis3.5.0
 log:slf4j-1.7.26+logback-1.2.3
 other:gson  lombok 
 
 
 基本功能支持: 
+-------------------	
 1、打印log
 2、资源属性注入，String、map
 3、mysql数据库连接，及crud
@@ -22,5 +25,7 @@ other:gson  lombok
 
 
 打包及运行:
-cd CdTelecom
-mvn clean install
+-------------------	
+From the command line with Maven installed:
+	$ cd CdTelecom
+	$ mvn clean install

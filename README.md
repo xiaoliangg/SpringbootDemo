@@ -23,6 +23,7 @@ Springboot demo by xiaoliang。
 - 9、异常处理     @ControllerAdvice + @ExceptionHandler 全局处理 Controller 层异常
 - 10、lombok新增
 - 11、springboot 多profile以支持多种线上环境;junit 单元测试 支持多种Profile
+- 12、捕获全局异常，并邮件预警
 
 
 打包及运行:
@@ -33,6 +34,6 @@ From the command line with Maven installed:
 
 运行:
  #####dev
-3. java -jar app-arqiaCdr-3.0.jar --spring.profiles.active=dev
+3. java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
  #####uat
-3. java -jar app-arqiaCdr-3.0.jar --spring.profiles.active=uat
+3. java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=uat

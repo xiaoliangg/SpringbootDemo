@@ -3,6 +3,7 @@ package com.cdtelecom.handler;
 import com.cdtelecom.Exception.BusinessException;
 import com.cdtelecom.controller.CdTelecomController;
 import com.cdtelecom.pojo.response.QueryResponse;
+import com.cdtelecom.util.EmailThread;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -35,6 +36,7 @@ public class GlobalExceptionHandler {
         r.setErrorCode("0");
         r.setErrorDesc("默认失败");
         r.setDataFlow("999");
+        sendEmail("testMsg:" + e + "<br>");
         return r;
     }
 
@@ -53,6 +55,7 @@ public class GlobalExceptionHandler {
         r.setErrorCode("1");
         r.setErrorDesc("失败原因:" + e.getMessage());
         r.setDataFlow("1000");
+        sendEmail("testMsg:" + e + "<br>");
         return r;
     }
 
@@ -70,6 +73,17 @@ public class GlobalExceptionHandler {
         r.setErrorCode("1");
         r.setErrorDesc("失败原因:" + e.getBindingResult().getFieldError().getDefaultMessage());
         r.setDataFlow("1000");
+        sendEmail("testMsg:" + e + "<br>");
+
         return r;
+    }
+
+    private void sendEmail(String errorMsg) {
+
+        try{
+            new Thread(new EmailThread("test", "",errorMsg,"1535523313@qq.com,xiaoliangyuu@163.com", "")).start();
+        }catch(Exception e2){
+            logger.error("发送邮件失败:" ,e2);
+        }
     }
 }

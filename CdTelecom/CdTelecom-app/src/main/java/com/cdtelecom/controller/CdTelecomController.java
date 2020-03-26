@@ -51,7 +51,7 @@ public class CdTelecomController {
 
 	@RequestMapping("/cdTelecomBiz")
 //    public BasicResponse getCountryByIp(String request) {
-    public BasicResponse getCountryByIp(@RequestBody BasicRequest request) {
+    public BasicResponse getCountryByIp(@RequestBody BasicRequest request) throws Exception {
 		logger.info("requestBean:" + request);
 
 		logger.info(bizMap.get(request.getBusiType()));
@@ -64,7 +64,9 @@ public class CdTelecomController {
 		r.setDataFlow("999");
 		String responseStr = GsonUtil.getJSONString(r);
 		logger.info("responseStr:" + responseStr);
-
+		if(r.getCommSeq().equals("111")){
+			throw new Exception("1122");
+		}
 		return r;
 	}
 

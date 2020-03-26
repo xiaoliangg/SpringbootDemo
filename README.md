@@ -26,7 +26,7 @@ Springboot demo by xiaoliang。
 - 12、捕获全局异常，并邮件预警
 
 
-打包及运行:
+打包:
 -------------------	
 From the command line with Maven installed:
 - cd CdTelecom

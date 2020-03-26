@@ -22,6 +22,7 @@ Springboot demo by xiaoliang。
 - 8、请求报文校验   spring封装的Hibernate校验框架
 - 9、异常处理     @ControllerAdvice + @ExceptionHandler 全局处理 Controller 层异常
 - 10、lombok新增
+- 11、springboot 多profile以支持多种线上环境;junit 单元测试 支持多种Profile
 
 
 打包及运行:
@@ -29,3 +30,9 @@ Springboot demo by xiaoliang。
 From the command line with Maven installed:
 - cd CdTelecom
 - mvn clean install
+
+运行:
+ #####dev
+3. java -jar app-arqiaCdr-3.0.jar --spring.profiles.active=dev
+ #####uat
+3. java -jar app-arqiaCdr-3.0.jar --spring.profiles.active=uat

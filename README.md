@@ -33,7 +33,7 @@ From the command line with Maven installed:
 - mvn clean install
 
 运行:
-#####dev
+	#####dev
 java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
-#####uat
+	#####uat
 java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=uat

@@ -25,6 +25,9 @@ Springboot demo by xiaoliang。
 - 11、springboot 多profile以支持多种线上环境;junit 单元测试 支持多种Profile
 - 12、捕获全局异常，并邮件预警
 
+2020/5/11 16:58 新增
+- 13、1、日志改为aop打印; 2、aop demo; 3、aop中使用自定义注解
+- 14、mock 测试controller demo
 
 打包:
 -------------------	

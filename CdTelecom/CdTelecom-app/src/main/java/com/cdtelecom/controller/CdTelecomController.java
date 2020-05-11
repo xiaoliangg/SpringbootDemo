@@ -1,6 +1,7 @@
 package com.cdtelecom.controller;
 
 import com.cdtelecom.Exception.BusinessException;
+import com.cdtelecom.logic.ILogic;
 import com.cdtelecom.mapper.AssetInfoMapper;
 import com.cdtelecom.po.AssetInfo;
 import com.cdtelecom.pojo.request.BasicRequest;
@@ -38,6 +39,8 @@ public class CdTelecomController {
 	@Autowired
 	private TransactionTestService transactionTestService;
 	@Autowired
+	private ILogic openDataFlowLogic;
+	@Autowired
 	Validator globalValidator;
 //	@Autowired
 //	private MyAppConfiguration configuration;
@@ -53,9 +56,9 @@ public class CdTelecomController {
 //    public BasicResponse getCountryByIp(String request) {
     public BasicResponse getCountryByIp(@RequestBody BasicRequest request) throws Exception {
 		logger.info("requestBean:" + request);
-
 		logger.info(bizMap.get(request.getBusiType()));
 
+		openDataFlowLogic.operate(GsonUtil.getJSONString(request),request.getBusiType());
 
         QueryResponse r = new QueryResponse();
 		r.setCommSeq("111");
@@ -67,6 +70,24 @@ public class CdTelecomController {
 		if(r.getCommSeq().equals("111")){
 			throw new Exception("1122");
 		}
+		return r;
+	}
+
+	@RequestMapping("/testAspectAndMock")
+//    public BasicResponse getCountryByIp(String request) {
+	public BasicResponse testAspectAndMock(@RequestBody BasicRequest request) throws Exception {
+		logger.info("requestBean:" + request);
+		logger.info(bizMap.get(request.getBusiType()));
+
+		openDataFlowLogic.operate(GsonUtil.getJSONString(request),request.getBusiType());
+
+		QueryResponse r = new QueryResponse();
+		r.setCommSeq("111");
+		r.setErrorCode("0");
+		r.setErrorDesc("成功");
+		r.setDataFlow("999");
+		String responseStr = GsonUtil.getJSONString(r);
+		logger.info("responseStr:" + responseStr);
 		return r;
 	}
 

@@ -79,13 +79,8 @@ public class CdTelecomController {
 		logger.info("requestBean:" + request);
 		logger.info(bizMap.get(request.getBusiType()));
 
-		openDataFlowLogic.operate(GsonUtil.getJSONString(request),request.getBusiType());
+		QueryResponse r = openDataFlowLogic.operate(GsonUtil.getJSONString(request),request.getBusiType());
 
-		QueryResponse r = new QueryResponse();
-		r.setCommSeq("111");
-		r.setErrorCode("0");
-		r.setErrorDesc("成功");
-		r.setDataFlow("999");
 		String responseStr = GsonUtil.getJSONString(r);
 		logger.info("responseStr:" + responseStr);
 		return r;

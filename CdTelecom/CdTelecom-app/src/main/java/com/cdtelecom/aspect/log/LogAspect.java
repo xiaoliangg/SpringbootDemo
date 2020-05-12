@@ -31,25 +31,25 @@ public class LogAspect {
     @ResponseBody
     @Around(value = "checkPointcut()")
     public Object aroundNotice(ProceedingJoinPoint pjp) throws Throwable {
-        logger.info("拦截到了{}方法...", pjp.getSignature());
-        logger.info("pjp.getArgs():{}" ,pjp.getArgs());
-        logger.info("pjp.getKind():{}" ,pjp.getKind());
-        logger.info("pjp.getSourceLocation():{}" ,pjp.getSourceLocation());
-        logger.info("pjp.getStaticPart():{}" ,pjp.getStaticPart());
-        logger.info("pjp.getTarget():{}" ,pjp.getTarget());
-        logger.info("pjp.getThis():{}" ,pjp.getThis());
-        logger.info("pjp.getClass():{}" ,pjp.getClass());
+        logger.info("打印log{}方法...", pjp.getSignature());
+        logger.info("打印log pjp.getArgs():{}" ,pjp.getArgs()[0]);
+        logger.info("打印log pjp.getKind():{}" ,pjp.getKind());
+        logger.info("打印log pjp.getSourceLocation():{}" ,pjp.getSourceLocation());
+        logger.info("打印log pjp.getStaticPart():{}" ,pjp.getStaticPart());
+        logger.info("打印log pjp.getTarget():{}" ,pjp.getTarget());
+        logger.info("打印log pjp.getThis():{}" ,pjp.getThis());
+        logger.info("打印log pjp.getClass():{}" ,pjp.getClass());
         Signature signature = pjp.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         //获取目标方法
         Method targetMethod = methodSignature.getMethod();
-        logger.info("目标方法所有注解:" + targetMethod.getDeclaredAnnotations());
+        logger.info("打印log  目标方法所有注解:" + targetMethod.getDeclaredAnnotations());
         if (targetMethod.isAnnotationPresent(PrintReqParam.class)) {
-            logger.info("包含自定义注解:" + PrintReqParam.class.getName());
+            logger.info("打印log  包含自定义注解:" + PrintReqParam.class.getName());
         }
-        logger.info(pjp.getArgs() + "开始执行!");
+        logger.info("打印log" + pjp.getArgs() + "开始执行! ");
         Object result = pjp.proceed();
-        logger.info(pjp.getArgs() + "执行完成:" + result);
+        logger.info("打印log" + pjp.getArgs() + "执行完成:" + result);
         return result;
     }
 }

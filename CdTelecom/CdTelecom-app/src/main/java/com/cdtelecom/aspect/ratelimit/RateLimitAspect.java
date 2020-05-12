@@ -37,7 +37,7 @@ public class RateLimitAspect {
     @ResponseBody
     @Around(value = "checkPointcut()")
     public Object aroundNotice(ProceedingJoinPoint pjp) throws Throwable {
-        logger.info("拦截到了{}方法...", pjp.getSignature() + "requestId:" + pjp.getArgs()[0]);
+//        logger.info("{}方法开始进行限流过滤", pjp.getSignature());
         Signature signature = pjp.getSignature();
         MethodSignature methodSignature = (MethodSignature)signature;
         //获取目标方法
@@ -47,9 +47,10 @@ public class RateLimitAspect {
             RateLimit rateLimit = targetMethod.getAnnotation(RateLimit.class);
             rateLimiter.setRate(rateLimit.perSecond());
             if (!rateLimiter.tryAcquire(rateLimit.timeOut(), rateLimit.timeOutUnit())){
-                logger.info("服务器繁忙,当前rateLimiter.getRate()" + rateLimiter.getRate());
+                logger.info("该请求需要限流！！！,当前rate:" + rateLimiter.getRate() + "|当前requestId:" + pjp.getArgs()[0] + "|当前signature:" + pjp.getSignature());
                 return "服务器繁忙，请稍后再试!";
-
+            }else{
+                logger.info("该请求无需限流,当前rate:" + rateLimiter.getRate() + "|当前requestId:" + pjp.getArgs()[0] + "|当前signature:" + pjp.getSignature());
             }
         }
         return pjp.proceed();

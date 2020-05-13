@@ -8,6 +8,7 @@ import com.cdtelecom.pojo.request.BasicRequest;
 import com.cdtelecom.pojo.request.ValidateTestBean;
 import com.cdtelecom.pojo.response.BasicResponse;
 import com.cdtelecom.pojo.response.QueryResponse;
+import com.cdtelecom.redis.RedisLockUtil;
 import com.cdtelecom.redis.concurrent.locks.RedisReentrantLock;
 import com.cdtelecom.service.TransactionTestService;
 import com.cdtelecom.task.TestTask;
@@ -31,6 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.atomic.AtomicInteger;
 
 @RestController
 @EnableAutoConfiguration
@@ -188,7 +190,7 @@ public class CdTelecomController {
 
 	private final static RedisReentrantLock redisReentrantLock = new RedisReentrantLock("keyForLock12");
 	/**
-	 * 测试redis分布式锁
+	 * 测试redis分布式锁 RedisReentrantLock
 	 * 测试方法:读取出某个磁盘文件的数，+1后再写入。多体*多线程来操作
 	 * @param request
 	 * @return
@@ -197,6 +199,47 @@ public class CdTelecomController {
 	public BasicResponse addFileNumber(ValidateTestBean request){
 
 		redisReentrantLock.lock();
+		addAndWrite();
+		redisReentrantLock.unlock();
+
+		QueryResponse r = new QueryResponse();
+		r.setCommSeq("111");
+		return r;
+	}
+	private static final AtomicInteger failTimes = new AtomicInteger();
+
+	@RequestMapping("/addFileNumber2")
+	public BasicResponse addFileNumber2(ValidateTestBean request){
+
+		boolean isWrited = false;
+		for(int i = 0;i<1000;i++){
+			if(RedisLockUtil.lock("lockKey")){
+				addAndWrite();
+				redisReentrantLock.unlock();
+				isWrited = true;
+				break;
+			}
+			sleep(10);
+		}
+		if(!isWrited){
+			failTimes.addAndGet(1);
+		}
+
+
+		QueryResponse r = new QueryResponse();
+		r.setCommSeq(failTimes + "");
+		return r;
+	}
+
+	private void sleep(long time) {
+		try {
+            Thread.sleep(time);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+	}
+
+	private void addAndWrite() {
 		File f = new File("C:\\Users\\ll\\Desktop\\1.txt");
 		List<String> dataList = IOUtil.importCsv(f);
 		int number = Integer.parseInt(dataList.get(0));
@@ -204,11 +247,6 @@ public class CdTelecomController {
 		dataList = new ArrayList<>();
 		dataList.add(number + "");
 		IOUtil.exportCsv(f,dataList);
-		redisReentrantLock.unlock();
-
-		QueryResponse r = new QueryResponse();
-		r.setCommSeq("111");
-		return r;
 	}
 
 

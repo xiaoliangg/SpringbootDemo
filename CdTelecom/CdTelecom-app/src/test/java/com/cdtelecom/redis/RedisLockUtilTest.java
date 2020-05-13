@@ -45,15 +45,32 @@ public class RedisLockUtilTest {
             this.countDownLatch = countDownLatch;
         }
         public void run(){
+
             for(int i = 0;i<loopTimes;i++){
-                if(RedisLockUtil.lock(key,expireTime)){
-                    succesTimes++;
-                    RedisLockUtil.unLock(key);
-                }else{
-                    failTimes.addAndGet(1);
+                boolean addSuccess = false;
+                for(int j = 0;j<1000;i++){
+                    if(RedisLockUtil.lock(key,expireTime)){
+                        succesTimes++;
+                        addSuccess = true;
+                        RedisLockUtil.unLock(key);
+                        break;
+                    }
+                    sleep();
+                }
+
+                if(!addSuccess){
+                    failTimes.incrementAndGet();
                 }
             }
             countDownLatch.countDown();
+        }
+
+        private void sleep() {
+            try {
+                Thread.sleep((int)(Math.random()*10));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 }

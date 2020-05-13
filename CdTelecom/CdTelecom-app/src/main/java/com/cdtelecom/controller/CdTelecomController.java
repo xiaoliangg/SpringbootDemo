@@ -8,9 +8,11 @@ import com.cdtelecom.pojo.request.BasicRequest;
 import com.cdtelecom.pojo.request.ValidateTestBean;
 import com.cdtelecom.pojo.response.BasicResponse;
 import com.cdtelecom.pojo.response.QueryResponse;
+import com.cdtelecom.redis.concurrent.locks.RedisReentrantLock;
 import com.cdtelecom.service.TransactionTestService;
 import com.cdtelecom.task.TestTask;
 import com.cdtelecom.util.GsonUtil;
+import com.cdtelecom.util.IOUtil;
 import org.apache.ibatis.annotations.Update;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,6 +26,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -168,7 +173,6 @@ public class CdTelecomController {
 	}
 	@RequestMapping("/testValidateException2") //测试validate异常
 	public BasicResponse testValidateException2(@RequestBody ValidateTestBean request){
-
 		//手动校验-分组校验
 		Set<ConstraintViolation<ValidateTestBean>> set = globalValidator.validate(request,Update.class);
 
@@ -180,10 +184,32 @@ public class CdTelecomController {
 		r.setCommSeq("111");
 		return r;
 	}
-//	@RequestMapping("/hello3")
-//	String home() {
-//		return "Hello World3!";
-//	}
+
+
+	private final static RedisReentrantLock redisReentrantLock = new RedisReentrantLock("keyForLock12");
+	/**
+	 * 测试redis分布式锁
+	 * 测试方法:读取出某个磁盘文件的数，+1后再写入。多体*多线程来操作
+	 * @param request
+	 * @return
+	 */
+	@RequestMapping("/addFileNumber")
+	public BasicResponse addFileNumber(ValidateTestBean request){
+
+		redisReentrantLock.lock();
+		File f = new File("C:\\Users\\ll\\Desktop\\1.txt");
+		List<String> dataList = IOUtil.importCsv(f);
+		int number = Integer.parseInt(dataList.get(0));
+		number++;
+		dataList = new ArrayList<>();
+		dataList.add(number + "");
+		IOUtil.exportCsv(f,dataList);
+		redisReentrantLock.unlock();
+
+		QueryResponse r = new QueryResponse();
+		r.setCommSeq("111");
+		return r;
+	}
 
 
 	public Map<String, String> getBizMap() {

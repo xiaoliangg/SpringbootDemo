@@ -10,7 +10,7 @@ server:
 spring:
   profiles: uat
   datasource:
-    url: jdbc:mysql://39.104.84.245:3307/IotProductDB?characterEncoding=utf8&useSSL=false
+    url: jdbc:mysql://39.104.166.109:3306/iot_dev?characterEncoding=utf8&useSSL=false
     username: iottest
     password: Links@2018$
 server:
@@ -25,6 +25,21 @@ logging:
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
+#redis
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+#    password: redis20190618
+    timeout: 10
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: -1
+        max-idle: 8
+        min-idle: 0
+#redisExpireTime: 120
 mybatis:
   type-aliases-package: com.cdtelecom.po
 
@@ -36,8 +51,6 @@ bizMap: '{
 ,A07:''test2''
 ,A09:''test2''
 }'
-
-#chengduTelecom
 
 
 testP: test22222

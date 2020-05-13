@@ -30,13 +30,16 @@ Springboot demo by xiaoliang。
 - 14、mock 测试controller demo
 2020/5/12 11:19 新增
 - 15、新增guava 令牌桶限流(RateLimiter)，及相关测试。 暂不支持分组限流(指定几个接口共享一个令牌桶，另外几个接口共享另外的令牌桶)，只能所有接口共享一个令牌桶。
-
+2020/5/13 18:06 新增
+- 16、现在redis普通操作类
+- 17、现在redis原子操作类、非阻塞锁
+- 18、AbstractRedisQueuedSynchronizer   RedisReentrantLock 用于分布式锁，暂未调试通过，无法使用。
 
 打包:
 -------------------	
 From the command line with Maven installed:
 - cd CdTelecom
-- mvn clean install
+- mvn clean package -DskipTests
 
 运行:
 -------------------

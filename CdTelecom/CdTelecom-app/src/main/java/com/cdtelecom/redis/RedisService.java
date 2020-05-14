@@ -407,6 +407,18 @@ public class RedisService {
         }
         return result;
     }
+    public boolean setnx(final String key, Object value, Long expireTime) {
+        boolean result = false;
+        try {
+            BoundValueOperations<Serializable, Object> operations = redisTemplate.boundValueOps(key);
+            result = operations.setIfAbsent(value,expireTime,TimeUnit.MILLISECONDS);
+//            result = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            logger.error("异常:" + e.getMessage());
+        }
+        return result;
+    }
 
 
     /**

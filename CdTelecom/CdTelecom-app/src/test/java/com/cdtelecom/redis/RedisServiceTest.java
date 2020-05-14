@@ -10,6 +10,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.io.Serializable;
 import java.util.*;
+import java.util.concurrent.CountDownLatch;
+import java.util.concurrent.atomic.AtomicInteger;
+
+import static com.cdtelecom.redis.RedisServiceTest.failInteger;
+import static com.cdtelecom.redis.RedisServiceTest.successTimes;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -339,6 +344,7 @@ public class RedisServiceTest {
         String key = (int)(Math.random()*1000)+"";
         String value = (int)(Math.random()*1000)+"";
 
+
         boolean r1 = redisService.setnx(key,value);
         boolean r2 = redisService.setnx(key,value);
 
@@ -347,6 +353,28 @@ public class RedisServiceTest {
         Object o = redisService.get(key);
         System.out.println("get():" + o);
     }
+
+    /**
+     * 测试setnx()原子性
+     */
+    public static final AtomicInteger failInteger = new AtomicInteger();
+    public static int successTimes;
+    @Test
+    public void testConcurrentSetnx() throws Exception {
+        String key = (int)(Math.random()*1000)+"";
+        int loopTimes = 100;
+        int threadNumber = 100;
+        CountDownLatch countDownLatch = new CountDownLatch(threadNumber);
+
+        for(int i=0;i<threadNumber;i++){
+            new SetnxThread(key,loopTimes,countDownLatch,redisService).start();
+        }
+        countDownLatch.await();
+        System.out.println("succesTimes:" + successTimes);
+        System.out.println("failInteger:" + failInteger);
+    }
+
+
     /**
      * 测试 getSet(final String key, Object value)
      * @throws Exception
@@ -387,6 +415,55 @@ class IncrementThread extends Thread{
         for(int i = 0;i<loopTimes;i++){
             redisService.getIncrement(key);
         }
+
+    }
+}
+
+class SetnxThread extends Thread{
+    private String key;
+    private int loopTimes;
+    private CountDownLatch countDownLatch;
+    private RedisService redisService;
+//    private AtomicInteger failInteger;
+
+
+    public SetnxThread(String key, int loopTimes, CountDownLatch countDownLatch, RedisService redisService) {
+        this.key = key;
+        this.loopTimes = loopTimes;
+        this.countDownLatch = countDownLatch;
+        this.redisService = redisService;
+//        this.failInteger = failInteger;
+    }
+
+    public void run(){
+        for(int i = 0;i<loopTimes;i++){
+//            String value = (int)(Math.random()*1000)+"";
+            String value = "1";
+            setnxAndAdd(value);
+        }
+        countDownLatch.countDown();
+    }
+
+    private void setnxAndAdd(String value) {
+        for(int i =0;i<100;i++){
+            if(redisService.setnx(key,value,30000L)){
+                successTimes = successTimes +1;
+                try {
+                    Thread.sleep(10);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                redisService.remove(key);
+                return;
+            }
+            try {
+//                Thread.sleep((long)(Math.random()*1000));
+                Thread.sleep(10);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        failInteger.incrementAndGet();
 
     }
 }

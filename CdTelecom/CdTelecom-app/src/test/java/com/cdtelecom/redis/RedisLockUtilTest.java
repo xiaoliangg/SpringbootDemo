@@ -21,7 +21,7 @@ public class RedisLockUtilTest {
     public void testLock() throws Exception {
         String key = (int)(Math.random()*1000)+"";
         int loopTimes = 300;
-        int threadNumber = 5;
+        int threadNumber = 10;
         CountDownLatch countDownLatch = new CountDownLatch(threadNumber);
 
         for(int i=0;i<threadNumber;i++){
@@ -48,7 +48,7 @@ public class RedisLockUtilTest {
 
             for(int i = 0;i<loopTimes;i++){
                 boolean addSuccess = false;
-                for(int j = 0;j<1000;i++){
+                for(int j = 0;j<1000;j++){
                     if(RedisLockUtil.lock(key,expireTime)){
                         try {
                             Thread.sleep(10);

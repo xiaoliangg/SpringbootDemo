@@ -54,8 +54,6 @@ public final class RedisLockUtil {
         }
         Object o = redisService.get(key);
 
-
-
        //o==null表示持有线程已释放锁，再次尝试获取锁。如果再获取不到锁，且获取不到当前值，就返回false
         if(o == null){
             result = redisService.setnx(key, String.valueOf(value));
@@ -74,7 +72,7 @@ public final class RedisLockUtil {
             long newExpireTime = System.currentTimeMillis() + expire;
             Object o2 = redisService.getSet(key, String.valueOf(newExpireTime));
             if(o2 == null){
-                return false;
+                return true;
             }
             long currentExpireTime = Long.parseLong((String)o2);
             if(currentExpireTime == oldExpireTime) {

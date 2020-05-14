@@ -14,14 +14,14 @@ import java.util.concurrent.atomic.AtomicInteger;
 @ActiveProfiles("dev")
 public class RedisLockUtilTest {
 
-    private static int succesTimes = 0;
+    private static volatile int succesTimes = 0;
     private static final AtomicInteger failTimes = new AtomicInteger();
     private final static long expireTime = 30000;
     @Test
     public void testLock() throws Exception {
         String key = (int)(Math.random()*1000)+"";
-        int loopTimes = 3000;
-        int threadNumber = 30;
+        int loopTimes = 300;
+        int threadNumber = 5;
         CountDownLatch countDownLatch = new CountDownLatch(threadNumber);
 
         for(int i=0;i<threadNumber;i++){
@@ -50,12 +50,21 @@ public class RedisLockUtilTest {
                 boolean addSuccess = false;
                 for(int j = 0;j<1000;i++){
                     if(RedisLockUtil.lock(key,expireTime)){
+                        try {
+                            Thread.sleep(10);
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
                         succesTimes++;
                         addSuccess = true;
                         RedisLockUtil.unLock(key);
                         break;
                     }
-                    sleep();
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
 
                 if(!addSuccess){
@@ -65,13 +74,15 @@ public class RedisLockUtilTest {
             countDownLatch.countDown();
         }
 
-        private void sleep() {
-            try {
-                Thread.sleep((int)(Math.random()*10));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
+    }
+
+
+    @Test
+    public void test() throws Exception {
+        long time1 = System.currentTimeMillis();
+        Thread.sleep(1);
+        long time2 = System.currentTimeMillis();
+        System.out.println("time:" + (time2-time1));
     }
 }
 

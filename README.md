@@ -34,6 +34,10 @@ Springboot demo by xiaoliang。
 - 16、现在redis普通操作类
 - 17、现在redis原子操作类、非阻塞锁 RedisLockUtil(锁有问题！！ 原子操作方法setnx getSet可能也有问题)
 - 18、AbstractRedisQueuedSynchronizer   RedisReentrantLock 用于分布式锁，暂未调试通过，无法使用。
+- 19、分布式锁测试通过:RedisLockUtil、AbstractRedisQueuedSynchronizer、RedisReentrantLock
+      相关测试类:RedisLockTestController(分别使用RedisLockUtil 和 RedisReentrantLock进行多示例并发读写)  
+	             RedisLockUtilMultipleTest  RedisReentrantLockMultipleTest(RedisLockTestController的测试类)
+				 RedisLockUtilSingleTest    RedisReentrantLockSingleTest(redis实现的单机锁测试类)
 
 打包:
 -------------------	
@@ -44,6 +48,6 @@ From the command line with Maven installed:
 运行:
 -------------------
 ###### dev 
-java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev
+java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=dev --server.port=15022
 ###### uat 
 java -jar CdTelecom-app-0.0.1-SNAPSHOT.jar --spring.profiles.active=uat

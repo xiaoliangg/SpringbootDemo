@@ -9,10 +9,13 @@ import org.springframework.test.context.junit4.SpringRunner;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.atomic.AtomicInteger;
 
+/**
+ * 测试单机时的redis锁.测试方法:使用redis锁，并发修改succesTimes的值
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @ActiveProfiles("dev")
-public class RedisLockUtilTest {
+public class RedisLockUtilSingleTest {
 
     private static volatile int succesTimes = 0;
     private static final AtomicInteger failTimes = new AtomicInteger();
@@ -20,7 +23,7 @@ public class RedisLockUtilTest {
     @Test
     public void testLock() throws Exception {
         String key = (int)(Math.random()*1000)+"";
-        int loopTimes = 300;
+        int loopTimes = 3000;
         int threadNumber = 10;
         CountDownLatch countDownLatch = new CountDownLatch(threadNumber);
 
@@ -50,11 +53,6 @@ public class RedisLockUtilTest {
                 boolean addSuccess = false;
                 for(int j = 0;j<1000;j++){
                     if(RedisLockUtil.lock(key,expireTime)){
-                        try {
-                            Thread.sleep(10);
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
                         succesTimes++;
                         addSuccess = true;
                         RedisLockUtil.unLock(key);
@@ -75,7 +73,6 @@ public class RedisLockUtilTest {
         }
 
     }
-
 
     @Test
     public void test() throws Exception {

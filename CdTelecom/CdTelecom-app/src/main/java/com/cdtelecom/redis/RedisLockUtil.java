@@ -5,8 +5,9 @@ import com.cdtelecom.util.SpringUtil;
 
 //redis分布式锁
 public final class RedisLockUtil {
-
-    private static final int defaultExpire = 60;
+    //注意:过小会出问题，如当为60时，并发修改文件会出问题
+    //分析:此属性含义为过期时间，当锁已过期，但是操作未完成时，就可能出现多个线程同时执行并发操作
+    private static final int defaultExpire = 30*1000;
 
     private RedisLockUtil() {
         //
@@ -37,6 +38,7 @@ public final class RedisLockUtil {
 
     /**
      * 加锁 (不可重入、不可阻塞)
+     * 注意: 过期判断是以毫秒为粒度的，如果操作时间<1ms 可能会有问题
      * @param key redis key
      * @param expire 过期时间，单位毫秒
      * @return true:加锁成功，false，加锁失败

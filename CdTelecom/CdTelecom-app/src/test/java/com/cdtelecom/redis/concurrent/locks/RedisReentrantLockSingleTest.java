@@ -1,6 +1,5 @@
 package com.cdtelecom.redis.concurrent.locks;
 
-import com.cdtelecom.util.HttpClientUtil;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -8,19 +7,18 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
 /**
- * 请求两个节点服务进行测试
+ * 测试单机时的RedisReentrantLock.测试方法:使用RedisReentrantLock，并发修改succesTimes的值
  */
-public class RedisReentrantLockTest2 {
+@RunWith(SpringRunner.class)
+@SpringBootTest
+@ActiveProfiles("dev")
+public class RedisReentrantLockSingleTest {
 
-    public static final String  url = "http://localhost:15023/addFileNumber";
-    public static final String  url2 = "http://localhost:15022/addFileNumber";
-
-    public static final String  jsonStr = "111";
-    public static final String  charset = "utf-8";
-
+    public static RedisReentrantLock lock = new RedisReentrantLock(false,"keyForLock14");
+    public static int i = 0;
 
     @Test
-    public void testReidsLock() throws Exception {
+    public void testLock() throws Exception {
         IncrementThread3 test1 = new IncrementThread3("thread1");
         IncrementThread3 test2 = new IncrementThread3("thread2");
 
@@ -28,6 +26,7 @@ public class RedisReentrantLockTest2 {
         test2.start();
         test1.join();
         test2.join();
+        System.out.println(i);
     }
 
 
@@ -37,11 +36,15 @@ public class RedisReentrantLockTest2 {
             super.setName(name);
         }
         public void run(){
-            for (int j = 0; j < 1000; j++) {
-                if(j%2 == 0){
-                    HttpClientUtil.doPost(url,jsonStr,charset);
-                }else{
-                    HttpClientUtil.doPost(url2,jsonStr,charset);
+            for (int j = 0; j < 10000; j++) {
+//                lock.lock();
+                lock.lock();
+                try {
+                    System.out.println(this.getName() + " " + i);
+                    i++;
+                } finally {
+//                    lock.unlock();
+                    lock.unlock();
                 }
             }
         }

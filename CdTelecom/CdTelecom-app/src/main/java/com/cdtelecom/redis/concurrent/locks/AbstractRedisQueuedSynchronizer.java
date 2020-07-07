@@ -888,10 +888,10 @@ public abstract class AbstractRedisQueuedSynchronizer
                     failed = false;
                     return interrupted;
                 }
-                if (p != head && shouldParkAfterFailedAcquire(p, node) &&
+                if (p != head && shouldParkAfterFailedAcquire(p, node) &&  //当p为head时，不阻塞，因为正在运行的线程可能在其他实例，无法唤醒该实例的head节点，导致永远阻塞。故head节点循环获取锁。
                     parkAndCheckInterrupt())
                     interrupted = true;
-                sleep(1);
+                sleep(1);  //相对于单机运行，多实例运行时会有多个head节点正用一把分布式锁。此处sleep 1ms 释放cpu资源,避免独占1个cpu(TODO 后期优化:将clh队列维护放在redis？)
             }
         } finally {
             if (failed)

@@ -882,7 +882,7 @@ public abstract class AbstractRedisQueuedSynchronizer
             boolean interrupted = false;
             for (;;) {
                 final Node p = node.predecessor();
-                if (p == head && tryAcquire(arg)) { //p==head,tryAcquire失败的情况:1、本实例中新的节点争用   2、head已运行完成，但是其他实例获得了分布式锁
+                if (p == head && tryAcquire(arg)) { //p==head,tryAcquire失败的情况:1、本实例中新进入的节点争用锁   2、head已运行完成，但是其他实例获得了分布式锁
                     setHead(node);
                     p.next = null; // help GC
                     failed = false;

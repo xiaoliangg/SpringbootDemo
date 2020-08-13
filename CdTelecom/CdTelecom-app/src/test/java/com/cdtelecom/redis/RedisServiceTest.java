@@ -72,7 +72,14 @@ public class RedisServiceTest {
         String valueR = (String)redisService.get(key);
         System.out.println("结果:" + valueR+ "|原值:" + value);
 
-        redisService.remove(key);
+        //多次remove，首次remove返回true，后续remove返回false
+        boolean r;
+        r = redisService.remove(key);
+        System.out.println(r);
+        r = redisService.remove(key);
+        System.out.println(r);
+        r = redisService.remove(key);
+        System.out.println(r);
         valueR = (String)redisService.get(key);
         System.out.println("结果:" + valueR+ "|原值:" + value);
     }

@@ -136,10 +136,8 @@ public class RedisService {
      * 删除
      * @param key
      */
-    public void remove(final String key) {
-        if (exists(key)) {
-            redisTemplate.delete(key);
-        }
+    public boolean remove(final String key) {
+        return redisTemplate.delete(key);
     }
     /**
      * 判断缓存中是否有对应的value
